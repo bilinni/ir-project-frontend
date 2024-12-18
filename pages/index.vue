@@ -45,11 +45,11 @@
     <div class="mt-12 pb-12 space-y-8">
       <ClusterCard
         title="Locations"
-        :items="['London', 'Glasgow', 'Birmingham', 'Leeds', 'Liverpool']"
+        :items="firstTenLocations"
         image="https://hearthookhome.com/wp-content/uploads/2018/08/How-to-make-a-travel-map-with-pins.jpg" />
       <ClusterCard
         title="Venues"
-        :items="['Killyhevlin Hotel', 'Exeter Library', 'Sunrooms2', 'Voodoo Daddys']"
+        :items="firstTenVenues"
         image="https://www.fodors.com/wp-content/uploads/2021/04/03_ConcertHalls__SydneyOperaHouse_shutterstock_1446806309.jpg" />
       <ClusterCard
         title="Tags"
@@ -60,7 +60,33 @@
 </template>
 
 <script>
+import { onMounted, computed } from 'vue';
+import { useDataStore } from '~/stores/data';
+import TopBar from '~/components/TopBar.vue';
+import ClusterCard from '~/components/ClusterCard.vue';
+import SearchBar from '~/components/SearchBar.vue';
+
 export default {
+  components: { TopBar, ClusterCard, SearchBar },
+  setup() {
+    const store = useDataStore();
+
+    onMounted(async () => {
+      await store.fetchLocations();
+      await store.fetchVenues();
+    });
+
+    const locations = computed(() => store.locations);
+    const venues = computed(() => store.venues);
+
+    const firstTenLocations = computed(() => locations.value.slice(0, 10));
+    const firstTenVenues = computed(() => venues.value.slice(0, 10));
+
+    return {
+      firstTenLocations,
+      firstTenVenues
+    };
+  },
   data() {
     return {
       scrollY: 0,
@@ -88,7 +114,3 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-/* Add any additional styles if needed */
-</style>

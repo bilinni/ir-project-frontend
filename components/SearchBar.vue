@@ -2,9 +2,10 @@
   <div class="flex justify-center items-center bg-white rounded-xl px-4">
     <input
       type="text"
-      v-model="query"
+      v-model="store.search.search"
       placeholder="Search for concerts..."
       class="w-full py-4 text-lg text-gray-900 placeholder-gray-500 bg-transparent outline-none"
+      @keyup.enter="performSearch"
     />
     <button
       @click="performSearch"
@@ -16,28 +17,22 @@
 </template>
 
 <script>
-import { useRouter, useRoute } from 'vue-router'
-import { onMounted } from 'vue'
+import { ref, onMounted } from 'vue';
+import { useDataStore } from '~/stores/data';
 
 export default {
   setup() {
-    const router = useRouter()
-    const route = useRoute()
-    const query = ref('')
+    const store = useDataStore();
+    const router = useRouter();
 
-    onMounted(() => {
-      query.value = route.query.query || ''
-    })
+    const performSearch = async () => {
+      await store.fetchConcerts();
+      router.push('/search');
+    };
 
-    const performSearch = () => {
-      if (query.value.trim() !== '') {
-        router.push(`/search?query=${encodeURIComponent(query.value)}`)
-      }
-    }
-
-    return { router, route, query, performSearch }
+    return { store, performSearch };
   },
-}
+};
 </script>
 
 <style scoped>

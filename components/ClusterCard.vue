@@ -10,7 +10,6 @@
         :style="{
           backgroundImage: `url(${image || fallbackImage})`,
           backgroundPosition: parallaxPosition,
-          // filter: 'sepia(1) hue-rotate(270deg) saturate(2) blur(3px) brightness(0.7)'
         }"
       ></div>
       <div class="absolute inset-0 bg-purple-950/70"></div>
@@ -29,81 +28,52 @@
           class="w-fit py-4 text-center bg-gray-100 rounded-lg text-gray-600 hover:bg-primary hover:text-purple-950 cursor-pointer transition relative overflow-hidden"
           @click="navigateToItem(item)"
         >
-            <span v-if="Array.isArray(item)" class="relative z-10 font-bold text-nowrap w-fit px-6">
+          <span v-if="Array.isArray(item)" class="relative z-10 font-bold text-nowrap w-fit px-6">
             {{ item.join(' - ') }}
-            </span>
-            <span v-else class="relative z-10 font-bold text-nowrap w-fit px-6">
+          </span>
+          <span v-else class="relative z-10 font-bold text-nowrap w-fit px-6">
             {{ item }}
-            </span>
-        </li>
-        <li
-          :key="'see-all'"
-          class="w-40 py-4 text-center bg-gray-100 rounded-lg text-gray-600 hover:bg-primary hover: text-purple-950 cursor-pointer transition relative overflow-hidden"
-          @click="navigateToCluster"
-        >
-          <span class="relative z-10 font-bold">See all</span>
+          </span>
         </li>
       </ul>
     </div>
   </div>
 </template>
 
-<script setup>
-import { onMounted, onUnmounted, ref } from "vue"
-import { useRouter } from "vue-router"
+<script>
+import { ref, computed } from 'vue';
+import { useRouter } from 'vue-router';
+import { useDataStore } from '~/stores/data';
 
-// Define props
-const props = defineProps({
-  title: String, // Title of the cluster (e.g., Genre, Location)
-  items: Array, // List of items to display
-  image: String, // Optional image for the cluster card
-})
+export default {
+  props: {
+    title: String,
+    items: Array,
+    image: String,
+  },
+  setup() {
+    const store = useDataStore();
+    const router = useRouter();
+    const fallbackImage = ref('https://via.placeholder.com/150');
 
-// Fallback image for when no cluster image is provided
-const fallbackImage =
-  "https://via.placeholder.com/800x400?text=No+Image+Available"
+    const navigateToItem = (item) => {
+      const filterValue = Array.isArray(item) ? item.join(' - ') : item;
+      store.setQueryFilter(filterValue);
+      router.push('/search');
+    };
 
-// Router for navigation
-const router = useRouter()
+    const parallaxPosition = computed(() => {
+      // Add your parallax logic here if needed
+      return 'center';
+    });
 
-// Parallax Effect
-const parallaxPosition = ref("center 50%")
-const parallaxImage = ref(null)
-
-function handleScroll() {
-  if (parallaxImage.value) {
-    const rect = parallaxImage.value.getBoundingClientRect()
-    const windowHeight = window.innerHeight
-
-    // Check if the image is within the viewport
-    if (rect.top <= windowHeight && rect.bottom >= 0) {
-      // Calculate the visible percentage of the element
-      const visiblePercentage = (windowHeight - rect.top) / (windowHeight + rect.height)
-      const newPosition = Math.min(Math.max((visiblePercentage - 0.5) * 100, -50), 50) // Scale effect
-      parallaxPosition.value = `center ${50 + newPosition}%`
-    }
-  }
-}
-
-// Add event listener for scroll on mount
-onMounted(() => {
-  window.addEventListener("scroll", handleScroll)
-})
-
-// Remove event listener when component is destroyed
-onUnmounted(() => {
-  window.removeEventListener("scroll", handleScroll)
-})
-
-// Navigate to item-specific search
-function navigateToItem(item) {
-  router.push(`/search?item=${encodeURIComponent(item)}`)
-}
-
-// Navigate to full cluster page
-function navigateToCluster() {
-  router.push(`/search?cluster=${encodeURIComponent(props.title)}`)
-}
+    return {
+      fallbackImage,
+      navigateToItem,
+      parallaxPosition,
+    };
+  },
+};
 </script>
 
 <style scoped>

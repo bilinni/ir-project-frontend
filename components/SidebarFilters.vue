@@ -65,11 +65,7 @@ export default {
     }
   },
   computed: {
-    filteredGenres() {
-      return this.genres.filter((genre) =>
-        genre.toLowerCase().includes(this.genreSearch.toLowerCase())
-      )
-    },
+
   },
   methods: {
     toggleGenre(genre) {

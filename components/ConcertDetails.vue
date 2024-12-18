@@ -58,6 +58,7 @@
 </template>
 
 <script>
+console.log('Hello from ConcertDetails.vue', concert);
 export default {
   props: {
     concert: {
