@@ -6,14 +6,17 @@
         <div class="w-[calc(100vw-256px)] flex-1 p-6">
           <SearchBar />
 
-          <div class="grid grid-cols-1 mt-6 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div v-if="loading" class="flex justify-center items-center mt-6">
+            <p>Loading...</p>
+          </div>
+          <div v-else class="grid grid-cols-1 mt-6 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             <ConcertCard
               v-for="concert in paginatedConcerts"
               :key="concert.id"
               :concert="concert" />
           </div>
 
-          <div class="flex justify-center mt-6">
+          <div v-if="!loading" class="flex justify-center mt-6">
             <button
               @click="prevPage"
               :disabled="currentPage === 1"
@@ -50,9 +53,23 @@ export default {
     const store = useDataStore();
     const currentPage = ref(1);
     const itemsPerPage = 15;
+    const loading = ref(true);
+    const error = ref(null);
+
+    const fetchConcerts = async () => {
+      try {
+        loading.value = true;
+        await store.fetchConcerts();
+      } catch (err) {
+        error.value = 'Failed to load concerts';
+        console.error(err);
+      } finally {
+        loading.value = false;
+      }
+    };
 
     onMounted(() => {
-      store.fetchConcerts();
+      fetchConcerts();
     });
 
     const concerts = computed(() => store.concerts);
@@ -82,6 +99,12 @@ export default {
       }
     });
 
+    watch(concerts, () => {
+      if (currentPage.value > totalPages.value) {
+        currentPage.value = totalPages.value;
+      }
+    });
+
     return {
       concerts,
       paginatedConcerts,
@@ -89,6 +112,8 @@ export default {
       totalPages,
       nextPage,
       prevPage,
+      loading,
+      error,
     };
   }
 };

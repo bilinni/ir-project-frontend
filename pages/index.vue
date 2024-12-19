@@ -46,15 +46,18 @@
       <ClusterCard
         title="Locations"
         :items="firstTenLocations"
-        image="https://hearthookhome.com/wp-content/uploads/2018/08/How-to-make-a-travel-map-with-pins.jpg" />
+        image="https://hearthookhome.com/wp-content/uploads/2018/08/How-to-make-a-travel-map-with-pins.jpg"
+        filterType="location" />
       <ClusterCard
         title="Venues"
         :items="firstTenVenues"
-        image="https://www.fodors.com/wp-content/uploads/2021/04/03_ConcertHalls__SydneyOperaHouse_shutterstock_1446806309.jpg" />
+        image="https://www.fodors.com/wp-content/uploads/2021/04/03_ConcertHalls__SydneyOperaHouse_shutterstock_1446806309.jpg"
+        filterType="venue" />
       <ClusterCard
         title="Tags"
-        :items="[['London', 'Choir', 'Man'], ['Prada', 'Devil', 'Dominion'], ['Harold', 'Pinter'], ['Night', 'Christmas', 'Party']]"
-        image="https://static.vecteezy.com/system/resources/previews/036/053/662/large_2x/ai-generated-a-professional-music-studio-with-a-large-mixing-console-computer-monitors-and-studio-monitors-free-photo.jpeg" />
+        :items="firstTenKeywords"
+        image="https://static.vecteezy.com/system/resources/previews/036/053/662/large_2x/ai-generated-a-professional-music-studio-with-a-large-mixing-console-computer-monitors-and-studio-monitors-free-photo.jpeg"
+        filterType="tag" />
     </div>
   </div>
 </template>
@@ -74,17 +77,21 @@ export default {
     onMounted(async () => {
       await store.fetchLocations();
       await store.fetchVenues();
+      await store.fetchClusterKeywords();
     });
 
     const locations = computed(() => store.locations);
     const venues = computed(() => store.venues);
+    const clusterKeywords = computed(() => store.clusterKeywords);
 
     const firstTenLocations = computed(() => locations.value.slice(0, 10));
     const firstTenVenues = computed(() => venues.value.slice(0, 10));
+    const firstTenKeywords = computed(() => Object.values(clusterKeywords.value).slice(0, 10));
 
     return {
       firstTenLocations,
-      firstTenVenues
+      firstTenVenues,
+      firstTenKeywords,
     };
   },
   data() {

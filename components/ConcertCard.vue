@@ -2,13 +2,13 @@
   <div class="bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden relative">
     <!-- Price Badge -->
     <div class="absolute top-4 right-4 bg-purple-950 text-white px-4 py-2 rounded-full shadow-md z-10">
-      {{ concert.Price || "On request" }}
+      {{ concert.Price || concert.Price_x || "On request" }}
     </div>
 
     <!-- Image Section with Gradient Overlay -->
     <div class="relative">
       <img
-        :src="concert['Image Link'] || fallbackImage"
+        :src="concert['Image Link'] || concert['Image Link_x'] || fallbackImage"
         alt="Concert Image"
         class="w-full h-48 object-cover"
       />
@@ -17,16 +17,16 @@
 
     <!-- Content Section -->
     <div class="p-6">
-      <h3 class="text-xl font-bold text-black mb-3">{{ concert["Event Name"] }}</h3>
+      <h3 class="text-xl font-bold text-black mb-3">{{ concert["Event Name"] || concert["Event Name_x"] || "No Name"}}</h3>
       
       <div class="space-y-2">
         <div class="flex items-center text-gray-900">
           <i class="fas fa-map-marker-alt w-5"></i>
-          <span class="ml-2">{{ concert.Venue }}</span>
+          <span class="ml-2">{{ concert.Venue || concert.Venue_x}}</span>
         </div>
         <div class="flex items-center text-gray-900">
           <i class="fas fa-calendar-alt w-5"></i>
-          <span class="ml-2">{{ concert.Date }}</span>
+          <span class="ml-2">{{ concert.Date || concert.Date_x || "No Date"}}</span>
         </div>
         
       </div>
@@ -42,7 +42,7 @@
 
       <!-- Action Button -->
       <nuxt-link
-        :to="`/concert/${concert.id}`"
+        :to="`/concert/${concert.docno}`"
         class="mt-6 w-full block text-center bg-purple-950 hover:bg-purple-900 text-white py-2 rounded-lg transition-colors duration-300"
       >
         View Details
@@ -61,6 +61,7 @@ const props = defineProps({
     required: true,
   },
 })
+console.log(props.concert)
 
 const fallbackImage = "https://via.placeholder.com/400x300?text=No+Image"
 

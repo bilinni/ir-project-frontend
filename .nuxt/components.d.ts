@@ -4,7 +4,6 @@ type IslandComponent<T extends DefineComponent> = T & DefineComponent<{}, {refre
 interface _GlobalComponents {
       'ClusterCard': typeof import("../components/ClusterCard.vue")['default']
     'ConcertCard': typeof import("../components/ConcertCard.vue")['default']
-    'ConcertDetails': typeof import("../components/ConcertDetails.vue")['default']
     'SearchBar': typeof import("../components/SearchBar.vue")['default']
     'SidebarFilters': typeof import("../components/SidebarFilters.vue")['default']
     'SimilarConcerts': typeof import("../components/SimilarConcerts.vue")['default']
@@ -34,7 +33,6 @@ interface _GlobalComponents {
     'NuxtRouteAnnouncer': IslandComponent<typeof import("../node_modules/nuxt/dist/app/components/server-placeholder")['default']>
       'LazyClusterCard': typeof import("../components/ClusterCard.vue")['default']
     'LazyConcertCard': typeof import("../components/ConcertCard.vue")['default']
-    'LazyConcertDetails': typeof import("../components/ConcertDetails.vue")['default']
     'LazySearchBar': typeof import("../components/SearchBar.vue")['default']
     'LazySidebarFilters': typeof import("../components/SidebarFilters.vue")['default']
     'LazySimilarConcerts': typeof import("../components/SimilarConcerts.vue")['default']
@@ -70,7 +68,6 @@ declare module 'vue' {
 
 export const ClusterCard: typeof import("../components/ClusterCard.vue")['default']
 export const ConcertCard: typeof import("../components/ConcertCard.vue")['default']
-export const ConcertDetails: typeof import("../components/ConcertDetails.vue")['default']
 export const SearchBar: typeof import("../components/SearchBar.vue")['default']
 export const SidebarFilters: typeof import("../components/SidebarFilters.vue")['default']
 export const SimilarConcerts: typeof import("../components/SimilarConcerts.vue")['default']
@@ -100,7 +97,6 @@ export const NuxtIsland: typeof import("../node_modules/nuxt/dist/app/components
 export const NuxtRouteAnnouncer: IslandComponent<typeof import("../node_modules/nuxt/dist/app/components/server-placeholder")['default']>
 export const LazyClusterCard: typeof import("../components/ClusterCard.vue")['default']
 export const LazyConcertCard: typeof import("../components/ConcertCard.vue")['default']
-export const LazyConcertDetails: typeof import("../components/ConcertDetails.vue")['default']
 export const LazySearchBar: typeof import("../components/SearchBar.vue")['default']
 export const LazySidebarFilters: typeof import("../components/SidebarFilters.vue")['default']
 export const LazySimilarConcerts: typeof import("../components/SimilarConcerts.vue")['default']

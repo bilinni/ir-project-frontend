@@ -2,45 +2,31 @@
   <div class="sidebar w-64 p-4 relative">
     <h2 class="text-xl font-bold mb-4 text-black">Filters</h2>
     <div class="mb-6">
-      <h3 class="font-bold mb-2 text-black">Price</h3>
-      <input
-        type="range"
-        v-model="price"
-        min="0"
-        max="500"
-        class="w-full"
-        style="accent-color: rgb(59 7 100 / var(--tw-bg-opacity, 1));"
-      />
-      <p class="text-sm text-gray-500">Up to ${{ price }}</p>
+      <h3 class="font-bold mb-2 text-black">Location</h3>
+      <select v-model="selectedLocation" class="w-full border border-gray-300 p-2 rounded-lg">
+        <option value="">All Locations</option>
+        <option v-for="location in locations" :key="location" :value="location">
+          {{ location }}
+        </option>
+      </select>
     </div>
     <div class="mb-6">
-      <h3 class="font-bold mb-2 text-black">Date</h3>
-      <input
-        type="date"
-        v-model="date"
-        class="w-full border border-gray-300 p-2 rounded-lg uppercase"
-      />
+      <h3 class="font-bold mb-2 text-black">Venue</h3>
+      <select v-model="selectedVenue" class="w-full border border-gray-300 p-2 rounded-lg">
+        <option value="">All Venues</option>
+        <option v-for="venue in filteredVenues" :key="venue" :value="venue">
+          {{ venue }}
+        </option>
+      </select>
     </div>
-    <div>
-      <h3 class="font-bold mb-2 text-black">Genre</h3>
-      <input
-        type="text"
-        v-model="genreSearch"
-        placeholder="Search genres"
-        class="w-full border border-gray-300 p-2 rounded-lg mb-2"
-      />
-      <ul>
-        <li
-          v-for="genre in filteredGenres"
-          :key="genre"
-          class="mb-1 text-dark-purple hover:underline cursor-pointer"
-          @click="toggleGenre(genre)"
-        >
-          <span :class="{ 'font-bold': selectedGenres.includes(genre) }">
-            {{ genre }}
-          </span>
-        </li>
-      </ul>
+    <div class="mb-6">
+      <h3 class="font-bold mb-2 text-black">Tags</h3>
+      <select v-model="selectedKeyword" class="w-full border border-gray-300 p-2 rounded-lg">
+        <option value="">All Tags</option>
+        <option v-for="keyword in keywords" :key="keyword" :value="keyword">
+          {{ keyword.join(' - ') }}
+        </option>
+      </select>
     </div>
     <button
       @click="applyFilters"
@@ -52,38 +38,57 @@
 </template>
 
 <script>
-export default {
-  props: {
-    genres: Array,
-  },
-  data() {
-    return {
-      price: 100,
-      date: '',
-      selectedGenres: [],
-      genreSearch: '',
-    }
-  },
-  computed: {
+import { computed, ref, watch, onMounted } from 'vue';
+import { useDataStore } from '~/stores/data';
 
-  },
-  methods: {
-    toggleGenre(genre) {
-      if (this.selectedGenres.includes(genre)) {
-        this.selectedGenres = this.selectedGenres.filter((g) => g !== genre)
-      } else {
-        this.selectedGenres.push(genre)
-      }
-    },
-    applyFilters() {
-      this.$emit('apply-filters', {
-        price: this.price,
-        date: this.date,
-        genres: this.selectedGenres,
-      })
-    },
-  },
-}
+export default {
+  setup() {
+    const store = useDataStore();
+    const selectedLocation = ref(store.getSelectedLocation());
+    const selectedVenue = ref(store.getSelectedVenue());
+    const selectedKeyword = ref(store.getKeywords());
+
+    const locations = computed(() => store.locations);
+    const venues = computed(() => store.venues);
+    const keywords = computed(() => Object.values(store.clusterKeywords));
+
+    // Always return all venues
+    const filteredVenues = computed(() => venues.value);
+
+    // Watch for changes in the store's data and update local state
+    watch(() => store.locations, (newLocations) => {
+      selectedLocation.value = store.getSelectedLocation();
+    });
+
+    watch(() => store.venues, (newVenues) => {
+      selectedVenue.value = store.getSelectedVenue();
+    });
+
+    const applyFilters = () => {
+      store.setSelectedLocation(selectedLocation.value);
+      store.setSelectedVenue(selectedVenue.value);
+      store.setQueryFilter(selectedKeyword.value ? selectedKeyword.value : []);
+      store.fetchConcerts();
+    };
+
+    // Fetch locations, venues, and keywords when the component is mounted
+    onMounted(() => {
+      store.fetchLocations();
+      store.fetchVenues();
+      store.fetchClusterKeywords();
+    });
+
+    return {
+      selectedLocation,
+      selectedVenue,
+      selectedKeyword,
+      locations,
+      filteredVenues,
+      keywords,
+      applyFilters
+    };
+  }
+};
 </script>
 
 <style scoped>
@@ -91,5 +96,4 @@ export default {
   height: 100%;
   overflow-y: auto;
 }
-
 </style>
