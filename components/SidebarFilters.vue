@@ -52,10 +52,8 @@ export default {
     const venues = computed(() => store.venues);
     const keywords = computed(() => Object.values(store.clusterKeywords));
 
-    // Always return all venues
     const filteredVenues = computed(() => venues.value);
 
-    // Watch for changes in the store's data and update local state
     watch(() => store.locations, (newLocations) => {
       selectedLocation.value = store.getSelectedLocation();
     });
@@ -71,7 +69,6 @@ export default {
       store.fetchConcerts();
     };
 
-    // Fetch locations, venues, and keywords when the component is mounted
     onMounted(() => {
       store.fetchLocations();
       store.fetchVenues();

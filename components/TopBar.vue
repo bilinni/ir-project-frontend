@@ -1,14 +1,12 @@
 <template>
     <header :class="headerClass" style="z-index: 9999;">
         <div class="w-full px-6 py-4 flex justify-between items-center">
-            <!-- Logo Section -->
             <div class="flex items-center">
                 <nuxt-link :to="'/#hero'" :class="titleClass" class="text-xl md:text-xl">
                     ConcertHub
                 </nuxt-link>
             </div>
 
-            <!-- Action Button -->
             <div>
                 <nuxt-link
                     to="/search"

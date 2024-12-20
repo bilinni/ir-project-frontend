@@ -1,7 +1,6 @@
 <template>
   <div class="min-h-screen">
     <TopBar class="fixed w-full" hide="true" />
-    <!-- Hero Section -->
     <div class="hero-wrapper relative">
       <div
         class="w-full h-screen bg-cover bg-center flex items-center justify-center text-white px-36"
@@ -41,7 +40,6 @@
       </div>
     </div>
 
-    <!-- Full-Width Cluster Section -->
     <div class="mt-12 pb-12 space-y-8">
       <ClusterCard
         title="Locations"

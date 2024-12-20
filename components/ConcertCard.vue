@@ -1,11 +1,10 @@
 <template>
   <div class="bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden relative">
-    <!-- Price Badge -->
+
     <div class="absolute top-4 right-4 bg-purple-950 text-white px-4 py-2 rounded-full shadow-md z-10">
       {{ concert.Price || concert.Price_x || "On request" }}
     </div>
 
-    <!-- Image Section with Gradient Overlay -->
     <div class="relative">
       <img
         :src="concert['Image Link'] || concert['Image Link_x'] || fallbackImage"
@@ -15,7 +14,6 @@
       <div class="absolute inset-0 bg-gradient-to-t from-gray-900/50 to-transparent"></div>
     </div>
 
-    <!-- Content Section -->
     <div class="p-6">
       <h3 class="text-xl font-bold text-black mb-3">{{ concert["Event Name"] || concert["Event Name_x"] || "No Name"}}</h3>
       
@@ -30,17 +28,7 @@
         </div>
         
       </div>
-
-      <!-- Tags/Genre -->
-      <!-- <div class="mt-4 flex flex-wrap gap-2">
-        <span v-for="(tag, index) in (concert.tags)" 
-              :key="index"
-              class="px-3 py-1 bg-purple-950 text-gray-100 rounded-full text-xs">
-          {{ tag }}
-        </span>
-      </div> -->
-
-      <!-- Action Button -->
+      
       <nuxt-link
         :to="`/concert/${concert.docno}`"
         class="mt-6 w-full block text-center bg-purple-950 hover:bg-purple-900 text-white py-2 rounded-lg transition-colors duration-300"

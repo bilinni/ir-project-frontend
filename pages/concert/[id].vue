@@ -2,7 +2,6 @@
   <div class="min-h-screen bg-gray-50">
     <TopBar class="fixed w-full z-50"/>
     <div class="pt-14">
-      <!-- Hero Section -->
       <div
         class="relative w-full h-[500px] bg-cover bg-center text-white flex items-center justify-center"
         :style="{ backgroundImage: `url(${imageLink})` }"
@@ -17,7 +16,6 @@
         </div>
       </div>
 
-      <!-- Concert Details Section -->
       <div class="container mx-auto px-4">
         <div class="mx-auto w-full p-8 bg-white shadow-xl rounded-2xl -mt-20 relative z-20 border border-purple-100">
           <h2 class="text-3xl font-bold mb-8 text-purple-950">Event Details</h2>
